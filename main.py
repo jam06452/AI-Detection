@@ -1,35 +1,22 @@
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
-
-tokenizer = AutoTokenizer.from_pretrained("GeorgeDrayson/modernbert-ai-detection")
-model = AutoModelForSequenceClassification.from_pretrained("GeorgeDrayson/modernbert-ai-detection")
-
-tokenizer1 = AutoTokenizer.from_pretrained("GeorgeDrayson/modernbert-ai-detection-raid-mage")
-model1 = AutoModelForSequenceClassification.from_pretrained("GeorgeDrayson/modernbert-ai-detection-raid-mage")
-
-
-model = model.to(torch.device("cpu"))
-model.eval()
-model1 = model1.to(torch.device("cpu"))
-model1.eval()
+import AI
 
 text = """
-Octopussy and The Living Daylights (sometimes published as Octopussy) is the fourteenth and final James Bond book written by Ian Fleming. The book is a collection of short stories published in the United Kingdom by Jonathan Cape on 23 June 1966, after Fleming's death in August 1964.
+The Spanish Revolution (1936–1939) was not a singular event but the explosive culmination of deep-seated social, economic, and political fractures that had been widening for decades. While often viewed merely as a prelude to World War II or a subset of the Spanish Civil War, the revolution was a distinct phenomenon driven by a desire to fundamentally restructure Spanish society. Its causes were rooted in extreme systemic inequality, the failure of monarchist institutions, and the rise of radical ideological movements.
 
-The book originally contained two stories, "Octopussy" and "The Living Daylights"; subsequent editions also included "The Property of a Lady" and then "007 in New York". The stories first appeared in different publications: "Octopussy" was serialised in the Daily Express in October 1965; "The Living Daylights" appeared in The Sunday Times colour supplement on 4 February 1962; "The Property of a Lady" was commissioned by Sotheby's for the 1963 edition of their journal, The Ivory Hammer; and "007 in New York" appeared in the New York Herald Tribune in October 1963.
+### Economic Inequality and Land Reform
+At the heart of the unrest was a feudalistic agrarian system. In the southern regions of Spain, such as Andalusia and Extremadura, vast estates known as *latifundios* were owned by a small elite of absentee landlords. Meanwhile, millions of landless peasants lived in abject poverty, working as day laborers for subsistence wages. The Second Republic’s attempts at land reform through the Agrarian Reform Law of 1932 were slow and bureaucratic, failing to meet the desperate expectations of the peasantry. This frustration pushed the rural working class toward the **CNT** (National Confederation of Labour), an anarcho-syndicalist union that advocated for direct action and the collective ownership of land.
 
-Many of the elements of the stories are from Fleming's own interests and experiences, including climbing in Kitzbühel, Austria, wartime commando deeds and the sea-life of Jamaica. He used the names of friends and acquaintances for characters within the stories and also used a recipe for scrambled eggs given to him by a friend.
+### The Role of the Church and Military
+The traditional pillars of Spanish society—the Catholic Church and the Army—acted as significant catalysts for revolution by their rigid opposition to modernization. The Church held a monopoly on education and significant economic influence, aligning itself firmly with the wealthy elite. Anti-clerical sentiment among the working class grew as the Church was perceived as an oppressor rather than a spiritual guide. Simultaneously, the military officer class was bloated, ultra-conservative, and prone to intervening in politics (the tradition of the *pronunciamiento*). When the Republic attempted to reduce the military’s power and secularize education, these institutions felt their existence was under threat, leading them to support the nationalist coup that ultimately triggered the revolutionary response.
 
-The two original stories, "Octopussy" and "The Living Daylights", were adapted for publication in comic strip format in the Daily Express in 1966–1967. Elements from the stories have also been used in the Eon Productions Bond films. Octopussy, starring Roger Moore as James Bond, was released in 1983 as the thirteenth film in the series and Fleming's story provided the background for the character Octopussy; "The Property of a Lady" was closely adapted for an auction sequence in the film. The Living Daylights, released in 1987, is the fifteenth Bond film produced by Eon and stars Timothy Dalton in his first appearance as Bond. "007 in New York" provided character and plot elements for the first two films starring Daniel Craig as Bond, Casino Royale and Quantum of Solace. 
+### Ideological Polarization
+The 1930s saw Spain become a laboratory for the competing ideologies of the era: Anarchism, Socialism, Communism, and Fascism. Unlike other European countries where Marxism dominated the left, Spain had a uniquely powerful anarchist movement. This movement did not just want better wages; it sought the total abolition of the state. On the other side, the rise of the **Falange** (Spanish Fascists) and the reactionary **CEDA** (Spanish Confederation of Autonomous Right-wing Groups) created a political environment where compromise became impossible. The victory of the Popular Front in the 1936 elections terrified the right, while the subsequent military uprising by Francisco Franco provided the vacuum of power necessary for workers to seize factories and organize militias.
+
+---
+
+### Conclusion
+The Spanish Revolution was the result of a "perfect storm" of historical grievances. It was a desperate attempt by the marginalized—miners in Asturias, factory workers in Barcelona, and peasants in the south—to replace a crumbling, oppressive hierarchy with a system of self-management. Though the revolution was eventually crushed by the weight of the Civil War and internal political divisions, its causes remain a profound study in how extreme inequality and institutional rigidity can lead to a total collapse of the social order.
+
 """
 
-inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=4096).to(torch.device("cpu"))
-
-with torch.no_grad():
-    outputs = model(**inputs)
-    outputs1 = model1(**inputs)
-
-probabilities = torch.nn.functional.softmax(outputs.logits, dim=-1)
-probabilities1 = torch.nn.functional.softmax(outputs1.logits, dim=-1)
-print(f"Probability of machine-generated text: {probabilities[0][1].item() * 100:.4f}%")
-print(f"Probability of machine-generated text (model1): {probabilities1[0][1].item() * 100:.4f}%")
+print(AI.main(text))
