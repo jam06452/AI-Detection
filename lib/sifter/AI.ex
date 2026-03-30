@@ -1,12 +1,13 @@
 defmodule Sifter.AI do
   def test(text) do
+    Nx.global_default_backend(EXLA.Backend)
+
     chunks =
       text
       |> String.split(~r/\s+/, trim: true)
       |> Enum.chunk_every(300, 150, [])
       |> Enum.map(&Enum.join(&1, " "))
 
-    Nx.global_default_backend(EXLA.Backend)
     {:ok, model_info} = Bumblebee.load_model({:hf, "followsci/bert-ai-text-detector"})
     {:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, "google-bert/bert-base-uncased"})
     serving = Bumblebee.Text.text_classification(model_info, tokenizer, top_k: nil)
@@ -29,6 +30,6 @@ defmodule Sifter.AI do
         _ -> Float.round(Enum.sum(chunk_scores) / Enum.count(chunk_scores), 2)
       end
 
-    List.to_tuple([total | chunk_scores])
+    %{total: total, chunk_scores: chunk_scores}
   end
 end
