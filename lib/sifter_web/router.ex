@@ -20,6 +20,12 @@ defmodule SifterWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/api", SifterWeb do
+    pipe_through :api
+
+    post "/upload", APIController, :upload
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", SifterWeb do
   #   pipe_through :api
