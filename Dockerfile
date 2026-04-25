@@ -60,7 +60,7 @@ RUN chown nobody /app
 
 ENV MIX_ENV="prod"
 
-COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/fts3 ./
+COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/sifter ./
 
 USER nobody
 
