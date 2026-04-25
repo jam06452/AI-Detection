@@ -59,6 +59,7 @@ WORKDIR "/app"
 RUN chown nobody /app
 
 ENV MIX_ENV="prod"
+ENV BUMBLEBEE_CACHE_DIR="/app/.cache"
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/sifter ./
 
