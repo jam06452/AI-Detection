@@ -18,10 +18,7 @@ COPY config config
 RUN mix deps.get --only $MIX_ENV
 RUN mix deps.compile
 
-COPY lib lib
-COPY priv priv
-COPY assets assets
-COPY rel rel
+COPY . .
 
 RUN mix assets.deploy
 RUN mix compile
