@@ -62,6 +62,8 @@ ENV MIX_ENV="prod"
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/sifter ./
 
+RUN chmod +x /app/bin/server
+
 USER nobody
 
 CMD ["/app/bin/server"]
