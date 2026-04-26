@@ -321,63 +321,13 @@ const initializeDetector = () => {
   const totalScore = document.getElementById("total-score")
   const scoreBar = document.getElementById("total-score-bar")
   const riskLabel = document.getElementById("total-risk-label")
-  const highlightOutput = document.getElementById("highlight-output")
   const chunkList = document.getElementById("chunk-list")
   const chunkCount = document.getElementById("chunk-count")
-  let overlayFrameRequested = false
 
-  const applyMarkdownHighlights = (scores) => {
-    if (!highlightOutput || !Array.isArray(scores) || scores.length === 0) return
-
-    const markdownBlocks = Array.from(highlightOutput.children)
-      .filter((element) => element.id !== "highlight-empty")
-
-    if (markdownBlocks.length === 0) return
-
-    markdownBlocks.forEach((element, index) => {
-      const score = scoreForIndex(scores, index, markdownBlocks.length)
-      if (score == null) return
-
-      element.classList.add("detector-overlay-markdown-block")
-      element.style.backgroundColor = scoreToHighlightColor(score)
-      element.title = `Chunk ${Math.min(scores.length, Math.floor(index * (scores.length / markdownBlocks.length)) + 1)}: ${score.toFixed(2)}%`
-    })
-  }
-
-  const renderMarkdownOverlay = (text) => {
-    if (!highlightOutput) return
-
-    highlightOutput.innerHTML = ""
-
-    if (!text?.trim()) {
-      const paragraph = document.createElement("p")
-      paragraph.id = "highlight-empty"
-      paragraph.className = "detector-empty-copy"
-      paragraph.textContent = "Your highlighted analysis will appear directly over your text."
-      highlightOutput.appendChild(paragraph)
-      return
-    }
-
-    const markdownHtml = markdownToHtml(text)
-    highlightOutput.innerHTML = markdownHtml || `<span class="detector-overlay-plain">${escapeHtml(text)}</span>`
-  }
-
-  const syncOverlayScroll = () => {
-    if (!input || !highlightOutput) return
-    highlightOutput.scrollTop = input.scrollTop
-    highlightOutput.scrollLeft = input.scrollLeft
-  }
-
-  const scheduleOverlayRender = () => {
-    if (!input || overlayFrameRequested) return
-
-    overlayFrameRequested = true
-
-    requestAnimationFrame(() => {
-      overlayFrameRequested = false
-      renderMarkdownOverlay(input.value)
-      syncOverlayScroll()
-    })
+  const scoreToRiskLabel = (score) => {
+    if (score >= 70) return "High likelihood"
+    if (score >= 40) return "Moderate likelihood"
+    return "Low likelihood"
   }
 
   const updateCharCount = () => {
@@ -392,7 +342,6 @@ const initializeDetector = () => {
       scoreBar.setAttribute("aria-valuenow", "0")
     }
     if (riskLabel) riskLabel.textContent = message || "Waiting for analysis"
-    renderMarkdownOverlay(input?.value || "")
 
     if (chunkList) {
       chunkList.innerHTML = ""
@@ -408,7 +357,7 @@ const initializeDetector = () => {
 
     if (submitButton) {
       submitButton.disabled = isLoading
-      submitButton.classList.toggle("is-loading", isLoading)
+      submitButton.classList.toggle("skeleton-loading", isLoading)
       submitButton.setAttribute("aria-busy", `${isLoading}`)
     }
 
@@ -425,10 +374,10 @@ const initializeDetector = () => {
 
     for (let index = 0; index < 3; index += 1) {
       const item = document.createElement("li")
-      item.className = "detector-chunk-skeleton"
+      item.className = "chunk-item skeleton-loading"
       item.innerHTML = `
-        <span class="detector-skeleton-line detector-skeleton-label"></span>
-        <span class="detector-skeleton-line detector-skeleton-score"></span>
+        <span class="chunk-text" style="flex: 1;">Loading...</span>
+        <span class="chunk-score">--</span>
       `
       chunkList.appendChild(item)
     }
@@ -453,10 +402,6 @@ const initializeDetector = () => {
 
     if (!chunkList) return
 
-    renderMarkdownOverlay(text)
-
-    if (!highlightOutput) return
-
     chunkList.innerHTML = ""
 
     const chunks = splitTextByCharRanges(text, scores.length || 1)
@@ -465,45 +410,26 @@ const initializeDetector = () => {
       chunkCount.textContent = `${chunks.length} ${chunks.length === 1 ? "chunk" : "chunks"}`
     }
 
-    const markdownMode = hasMarkdownSyntax(text)
-
-    if (!markdownMode) {
-      highlightOutput.innerHTML = ""
-    } else {
-      applyMarkdownHighlights(scores)
-    }
-
     chunks.forEach((chunkText, index) => {
       const score = scores[index] ?? 0
 
-      if (!markdownMode) {
-        const span = document.createElement("span")
-        span.className = "detector-overlay-chunk"
-        span.style.backgroundColor = scoreToHighlightColor(score)
-        span.title = `Chunk ${index + 1}: ${score.toFixed(2)}%`
-        span.textContent = chunkText
-        highlightOutput.appendChild(span)
-      }
-
       const item = document.createElement("li")
-      item.className = "flex items-center justify-between px-3 py-2"
+      item.className = "chunk-item"
+      
+      const shortText = chunkText.substring(0, 80) + (chunkText.length > 80 ? "..." : "")
+      
       item.innerHTML = `
-        <span class="detector-chunk-label">Chunk ${index + 1}</span>
-        <span class="detector-chunk-score">${score.toFixed(2)}%</span>
+        <span class="chunk-text">${escapeHtml(shortText)}</span>
+        <span class="chunk-score">${score.toFixed(2)}%</span>
       `
       chunkList.appendChild(item)
     })
-
-    syncOverlayScroll()
   }
 
   updateCharCount()
-  renderMarkdownOverlay(input?.value || "")
   input?.addEventListener("input", () => {
     updateCharCount()
-    scheduleOverlayRender()
   })
-  input?.addEventListener("scroll", syncOverlayScroll)
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault()
@@ -543,8 +469,6 @@ const initializeDetector = () => {
       setLoadingState(false)
     }
   })
-
-  syncOverlayScroll()
 }
 
 initializeDetector()
