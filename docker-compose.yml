@@ -1,0 +1,15 @@
+services:
+  ai:
+    build: .
+    image: ai-detection:latest
+    container_name: ai
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+    environment:
+      - SECRET_KEY_BASE=/Ryk/skrU+z5wjeG3lPYxbfNvwwfuMvUUIKePMou1hys+Xd0VhLkjmn7wA7JSfoO
+    volumes:
+      - model_cache:/app/.cache
+
+volumes:
+  model_cache:
