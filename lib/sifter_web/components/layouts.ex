@@ -35,6 +35,11 @@ defmodule SifterWeb.Layouts do
 
   def app(assigns) do
     ~H"""
+    <div class="flex items-start justify-between gap-2 mb-4">
+      <div></div>
+      <.dark_mode_toggle />
+    </div>
+
     <main class="px-4 py-12 sm:px-6 lg:px-8">
       <div class="mx-auto w-full max-w-7xl space-y-4">
         {render_slot(@inner_block)}

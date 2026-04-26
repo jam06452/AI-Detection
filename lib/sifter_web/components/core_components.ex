@@ -495,4 +495,69 @@ defmodule SifterWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  @doc """
+  Renders a dark mode toggle button.
+
+  The button toggles between light and dark modes by setting the `data-theme` attribute
+  on the document root. The preference is persisted in localStorage.
+
+  ## Examples
+
+      <.dark_mode_toggle />
+      <.dark_mode_toggle class="ml-2" />
+  """
+  attr :class, :string, default: "", doc: "additional CSS classes"
+  attr :rest, :global
+
+  def dark_mode_toggle(assigns) do
+    ~H"""
+    <button
+      id="theme-toggle"
+      class={["theme-toggle-btn", @class]}
+      title={gettext("Toggle dark mode")}
+      phx-hook=".ThemeToggle"
+      aria-label={gettext("Toggle dark mode")}
+      {@rest}
+    >
+      <span id="theme-icon" class="text-lg">🌙</span>
+    </button>
+
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".ThemeToggle">
+      export default {
+        mounted() {
+          this.updateIcon()
+          this.el.addEventListener("click", () => this.toggleTheme())
+          window.addEventListener("phx:set-theme", () => this.updateIcon())
+        },
+
+        updateIcon() {
+          const currentTheme = document.documentElement.getAttribute("data-theme")
+          const icon = document.getElementById("theme-icon")
+          if (currentTheme === "dark") {
+            icon.textContent = "☀️"
+          } else {
+            icon.textContent = "🌙"
+          }
+        },
+
+        toggleTheme() {
+          const currentTheme = document.documentElement.getAttribute("data-theme")
+          const newTheme = currentTheme === "dark" ? "system" : "dark"
+
+          if (newTheme === "system") {
+            localStorage.removeItem("phx:theme")
+            document.documentElement.removeAttribute("data-theme")
+          } else {
+            localStorage.setItem("phx:theme", newTheme)
+            document.documentElement.setAttribute("data-theme", newTheme)
+          }
+
+          this.updateIcon()
+          window.dispatchEvent(new Event("phx:set-theme"))
+        }
+      }
+    </script>
+    """
+  end
 end
