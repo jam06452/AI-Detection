@@ -11,8 +11,10 @@
     <%!-- Hero Section --%>
     <section class="content-section">
       <div class="section-header">
-        <h1>Text Analysis Tool</h1>
-        <p>Analyze text content with detailed insights and metrics</p>
+        <div>
+          <h1>Text Analysis Tool</h1>
+          <p>Analyze text content with detailed insights and metrics</p>
+        </div>
       </div>
     </section>
 
@@ -22,11 +24,11 @@
         <%!-- Left Column: Input --%>
         <div>
           <div class="card">
-            <div style="margin-bottom: 1rem;">
-              <h3>Text Input</h3>
-              <p class="text-muted text-small" style="margin: 0.5rem 0 0;">
-                Paste your text below for analysis
-              </p>
+            <div class="card-header">
+              <div>
+                <h3>Text Input</h3>
+                <p>Paste your text below for analysis</p>
+              </div>
             </div>
 
             <form id="ai-detector-form" class="space-y-4" aria-describedby="detector-form-hint">
@@ -43,12 +45,10 @@
               </div>
 
               <div class="toolbar">
-                <div>
-                  <p id="detector-form-hint" class="form-hint" style="margin: 0;">
-                    For best results, use passages longer than a paragraph
-                  </p>
-                </div>
-                <div style="display: flex; gap: 1rem; align-items: center;">
+                <p id="detector-form-hint" class="toolbar-hint">
+                  For best results, use passages longer than a paragraph
+                </p>
+                <div class="toolbar-group">
                   <span id="detector-char-count" class="badge">0 chars</span>
                   <button
                     id="detect-ai-button"
@@ -56,9 +56,7 @@
                     class="btn btn-primary"
                     aria-busy="false"
                   >
-                    <span>
-                      <.icon name="hero-arrow-right" class="w-4 h-4" /> Analyze
-                    </span>
+                    <.icon name="hero-arrow-right" class="w-4 h-4" /> Analyze
                   </button>
                 </div>
               </div>
@@ -70,12 +68,12 @@
         <div>
           <%!-- Score Card --%>
           <div class="card" style="margin-bottom: 1.5rem;">
-            <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--neutral-100); padding-bottom: 1rem;">
+            <div class="card-header">
               <h3>Analysis Result</h3>
             </div>
 
             <div class="score-section">
-              <div>
+              <div style="margin-bottom: 1.5rem;">
                 <span class="score-value" id="total-score">--</span>
                 <span class="score-percent">%</span>
               </div>
@@ -99,8 +97,8 @@
               </div>
             </div>
 
-            <div>
-              <h4 style="font-size: 0.95rem; margin-bottom: 1rem;">Score Scale</h4>
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--neutral-100);">
+              <h4 style="font-size: 0.95rem; margin: 0 0 1rem 0;">Score Scale</h4>
               <div class="legend">
                 <div class="legend-item">
                   <div class="legend-dot legend-dot-low"></div>
@@ -124,7 +122,7 @@
 
           <%!-- Breakdown Card --%>
           <div class="card">
-            <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--neutral-100); padding-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+            <div class="card-header">
               <h3>Detailed Breakdown</h3>
               <span id="chunk-count" class="badge">0 chunks</span>
             </div>

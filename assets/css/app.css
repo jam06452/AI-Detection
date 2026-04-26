@@ -172,14 +172,36 @@ header {
 .card {
   background: var(--white);
   border: 1px solid var(--neutral-100);
-  border-radius: 0.75rem;, background-color 200ms
+  border-radius: 0.75rem;
   padding: 1.5rem;
-  transition: border-color 200ms, box-shadow 200ms;
+  transition: border-color 200ms, box-shadow 200ms, background-color 200ms;
 }
 
 .card:hover {
   border-color: var(--neutral-200);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Card header with divider */
+.card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--neutral-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--neutral-900);
+}
+
+.card-header p {
+  margin: 0;
+  color: var(--neutral-600);
+  font-size: 0.95rem;
 }
 
 /* Content sections */
@@ -222,8 +244,8 @@ header {
   border-radius: 0.75rem;
   border: 1px solid var(--neutral-200);
   background: var(--white);
-  overflow: hidden;, background-color 200ms
-  transition: border-color 200ms, box-shadow 200ms;
+  overflow: hidden;
+  transition: border-color 200ms, box-shadow 200ms, background-color 200ms;
 }
 
 .input-wrapper:focus-within {
@@ -241,18 +263,15 @@ textarea[name="text"] {
   resize: vertical;
   font-family: inherit;
   min-height: 350px;
-}
-
-textarea[name="text"]:focus {
-  outline: none;
-}
- {
   background-color: var(--white);
   color: var(--neutral-900);
   transition: background-color 200ms, color 200ms;
 }
 
-textarea[name="text"]
+textarea[name="text"]:focus {
+  outline: none;
+}
+
 textarea[name="text"]::placeholder {
   color: var(--neutral-400);
 }
@@ -463,12 +482,21 @@ textarea[name="text"]::placeholder {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--neutral-100);
   margin-top: 1rem;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .toolbar-hint {
   font-size: 0.85rem;
   color: var(--neutral-600);
+  margin: 0;
 }
 
 /* Meta information */

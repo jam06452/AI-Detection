@@ -516,48 +516,11 @@ defmodule SifterWeb.CoreComponents do
       id="theme-toggle"
       class={["theme-toggle-btn", @class]}
       title={gettext("Toggle dark mode")}
-      phx-hook=".ThemeToggle"
       aria-label={gettext("Toggle dark mode")}
       {@rest}
     >
       <span id="theme-icon" class="text-lg">🌙</span>
     </button>
-
-    <script :type={Phoenix.LiveView.ColocatedHook} name=".ThemeToggle">
-      export default {
-        mounted() {
-          this.updateIcon()
-          this.el.addEventListener("click", () => this.toggleTheme())
-          window.addEventListener("phx:set-theme", () => this.updateIcon())
-        },
-
-        updateIcon() {
-          const currentTheme = document.documentElement.getAttribute("data-theme")
-          const icon = document.getElementById("theme-icon")
-          if (currentTheme === "dark") {
-            icon.textContent = "☀️"
-          } else {
-            icon.textContent = "🌙"
-          }
-        },
-
-        toggleTheme() {
-          const currentTheme = document.documentElement.getAttribute("data-theme")
-          const newTheme = currentTheme === "dark" ? "system" : "dark"
-
-          if (newTheme === "system") {
-            localStorage.removeItem("phx:theme")
-            document.documentElement.removeAttribute("data-theme")
-          } else {
-            localStorage.setItem("phx:theme", newTheme)
-            document.documentElement.setAttribute("data-theme", newTheme)
-          }
-
-          this.updateIcon()
-          window.dispatchEvent(new Event("phx:set-theme"))
-        }
-      }
-    </script>
     """
   end
 end

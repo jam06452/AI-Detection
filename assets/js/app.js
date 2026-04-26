@@ -45,9 +45,41 @@ window.addEventListener("storage", (event) => {
   }
 })
 
-window.addEventListener("phx:set-theme", (event) => {
-  setTheme(event.target?.dataset?.phxTheme || "system")
-})
+// Initialize theme toggle button
+function initThemeToggle() {
+  const button = document.getElementById("theme-toggle");
+  const icon = document.getElementById("theme-icon");
+
+  if (!button) return;
+
+  function updateIcon() {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    if (currentTheme === "dark") {
+      icon.textContent = "☀️";
+    } else {
+      icon.textContent = "🌙";
+    }
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "system" : "dark";
+
+    setTheme(newTheme)
+
+    updateIcon();
+  }
+
+  updateIcon();
+  button.addEventListener("click", toggleTheme);
+}
+
+// Initialize when DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initThemeToggle);
+} else {
+  initThemeToggle();
+}
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
