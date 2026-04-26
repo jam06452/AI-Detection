@@ -276,6 +276,47 @@ textarea[name="text"]::placeholder {
   color: var(--neutral-400);
 }
 
+/* Highlighted overlay */
+#highlighted-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: transparent;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  pointer-events: none;
+  overflow: auto;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  resize: vertical;
+  min-height: 350px;
+  letter-spacing: 0;
+  word-spacing: 0;
+}
+
+.highlighted-text-view {
+  display: contents;
+}
+
+.highlighted-chunk {
+  padding: 0;
+  border-radius: 0.25rem;
+  transition: opacity 200ms;
+  cursor: default;
+  display: inline;
+}
+
+.highlighted-chunk:hover {
+  opacity: 0.85;
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -443,6 +484,7 @@ textarea[name="text"]::placeholder {
   background: var(--neutral-50);
   font-size: 0.9rem;
   transition: all 200ms;
+  border-left: 4px solid rgba(251, 146, 60, 0.6);
 }
 
 .chunk-item:hover {

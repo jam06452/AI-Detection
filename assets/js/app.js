@@ -355,6 +355,7 @@ const initializeDetector = () => {
   const riskLabel = document.getElementById("total-risk-label")
   const chunkList = document.getElementById("chunk-list")
   const chunkCount = document.getElementById("chunk-count")
+  const highlightedOverlay = document.getElementById("highlighted-overlay")
 
   const scoreToRiskLabel = (score) => {
     if (score >= 70) return "High likelihood"
@@ -381,6 +382,10 @@ const initializeDetector = () => {
 
     if (chunkCount) {
       chunkCount.textContent = "0 chunks"
+    }
+
+    if (highlightedOverlay) {
+      highlightedOverlay.innerHTML = ""
     }
   }
 
@@ -419,6 +424,50 @@ const initializeDetector = () => {
     }
   }
 
+  const renderHighlightedText = (text, scores) => {
+    if (!highlightedOverlay) return
+
+    highlightedOverlay.innerHTML = ""
+
+    // Split text into words while preserving whitespace
+    const wordPattern = /(\S+|\s+)/g
+    const words = text.match(wordPattern) || []
+    
+    // Create character-to-chunk mapping
+    let charIndex = 0
+    const charToChunkScore = {}
+    const chunks = splitTextByCharRanges(text, scores.length || 1)
+    
+    chunks.forEach((chunkText, chunkIndex) => {
+      const score = scores[chunkIndex] ?? 0
+      for (let i = 0; i < chunkText.length; i++) {
+        charToChunkScore[charIndex + i] = score
+      }
+      charIndex += chunkText.length
+    })
+
+    // Render each word with highlighting based on its chunk
+    charIndex = 0
+    words.forEach((word) => {
+      const score = charToChunkScore[charIndex] ?? 0
+      const highlightColor = scoreToHighlightColor(score)
+
+      const span = document.createElement("span")
+      span.className = "highlighted-chunk"
+      
+      // Only apply background if it's not pure whitespace
+      if (word.trim()) {
+        span.style.backgroundColor = highlightColor
+        span.title = `${score.toFixed(2)}% AI`
+      }
+      
+      span.textContent = word
+      highlightedOverlay.appendChild(span)
+      
+      charIndex += word.length
+    })
+  }
+
   const renderResults = (text, payload) => {
     const total = clamp(Number(payload?.total ?? 0), 0, 100)
     const scores = Array.isArray(payload?.chunk_scores)
@@ -431,6 +480,8 @@ const initializeDetector = () => {
       scoreBar.setAttribute("aria-valuenow", total.toFixed(2))
     }
     if (riskLabel) riskLabel.textContent = scoreToRiskLabel(total)
+
+    renderHighlightedText(text, scores)
 
     if (!chunkList) return
 
@@ -447,6 +498,8 @@ const initializeDetector = () => {
 
       const item = document.createElement("li")
       item.className = "chunk-item"
+      const highlightColor = scoreToHighlightColor(score)
+      item.style.backgroundColor = highlightColor
       
       const shortText = chunkText.substring(0, 80) + (chunkText.length > 80 ? "..." : "")
       
@@ -461,6 +514,18 @@ const initializeDetector = () => {
   updateCharCount()
   input?.addEventListener("input", () => {
     updateCharCount()
+    // Clear highlighting when user types new text
+    if (highlightedOverlay) {
+      highlightedOverlay.innerHTML = ""
+    }
+  })
+
+  // Sync overlay scroll with textarea scroll
+  input?.addEventListener("scroll", () => {
+    if (highlightedOverlay) {
+      highlightedOverlay.scrollLeft = input.scrollLeft
+      highlightedOverlay.scrollTop = input.scrollTop
+    }
   })
 
   form.addEventListener("submit", async (event) => {
