@@ -63,6 +63,8 @@ ENV BUMBLEBEE_CACHE_DIR="/app/.cache"
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/sifter ./
 
+RUN mkdir -p /app/.cache && chown -R nobody:nobody /app/.cache && chmod 755 /app/.cache
+
 RUN chmod +x /app/bin/server
 
 USER nobody
