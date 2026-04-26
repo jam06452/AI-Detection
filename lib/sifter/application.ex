@@ -11,6 +11,7 @@ defmodule Sifter.Application do
       SifterWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:sifter, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Sifter.PubSub},
+      Sifter.AIServer,
       # Start a worker by calling: Sifter.Worker.start_link(arg)
       # {Sifter.Worker, arg},
       # Start to serve requests, typically the last entry

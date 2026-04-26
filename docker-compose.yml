@@ -8,6 +8,10 @@ services:
     restart: unless-stopped
     environment:
       - SECRET_KEY_BASE=/Ryk/skrU+z5wjeG3lPYxbfNvwwfuMvUUIKePMou1hys+Xd0VhLkjmn7wA7JSfoO
+      # CPU Optimization
+      - ERLANG_FLAGS=+S 0 +BP i16:i32
+      - EXLA_TARGET_BACKEND=native
+      - XLA_FLAGS=--xla_cpu_multi_threaded_eigen=true
     volumes:
       - model_cache:/app/.cache
 
