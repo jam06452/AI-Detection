@@ -11,3 +11,11 @@
 # What this does
 
 It takes a text input, it parses it, puts it into chunks, sends the chunks in parrallel through my AI Detection model. Then it returns a decimal output which I then jsonify to return to the frontend. The frontend then highlights which chunks are the most AI generated on a gradient.
+
+# How I made this
+
+I made a backend that takes in text and returns decimal, then I hooked it up to a simple html frontend claude made. I then optimized it with parallisation of chunks, then I redid the frontend to make it look pretty. 
+
+# How is this ran
+
+Its ran as a container on an oracle VM in a compose project, cloudflare tunnels handles proxying it to a URL that I have a CNAME recording pointing to.
