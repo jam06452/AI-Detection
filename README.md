@@ -1,3 +1,6 @@
+# Sifter
+A locally hosted alternative to detect AI generated text like quillbot or GPTZero
+
 # How to run
 
 - Either pull the container from the repo or clone it.
