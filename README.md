@@ -1,18 +1,9 @@
-# Sifter
+# How to run
 
-To start your Phoenix server:
+- Either pull the container from the repo or clone it.
+- Then start it but make sure you have "SECRET_KEY_BASE" configured, look in the premade compose for one.
 
-* Run `mix setup` to install and setup dependencies
-* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+# Tech Stack
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
+- Elixir Phoenix, with simple tailwind
+- The frontend calls the backend with json of the text, the backend returns the overall AI percentage, and a percentage for each chunk

@@ -11,7 +11,6 @@ services:
       # CPU Optimization
       - ERLANG_FLAGS=+S 0 +BP i16:i32
       - EXLA_TARGET_BACKEND=native
-      - XLA_FLAGS=--xla_cpu_multi_threaded_eigen=true
     volumes:
       - model_cache:/app/.cache
 
